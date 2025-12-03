@@ -2,6 +2,7 @@ import sys
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from datetime import datetime
+import random
 
 def get_database():
     print("IN GET_DATABASE")
@@ -48,26 +49,32 @@ def about_perso(db, team):
     print("IN PERSO")
     perso=1
     list_perso =get_list_perso(db)
-    team =show_perso(list_perso, team, perso)
-    #team =create_team(list_perso, perso)
+    #team =show_perso(list_perso, team, perso)
+    team =create_team(list_perso, team, perso)
 
 def show_team(team):
     print("IN SHOW_TEAM")
     print("VOICI L'EQUIPE")
     for item in team:
-        print("item")
+        print(item)
 
 def show_perso(list_perso, team, nb):
     print("IN SHOW_PERSO")
     for item in list_perso:
         print(f"Nom :{item["name"]}, Defense :{item["DEF"]}, Attaque :{item["ATK"]}, Points de vie :{item["PV"]}")
-    #get_choice_perso(nb)
-    team =create_team(list_perso, team, nb)
+    temp =get_choice_perso(nb)
+    #team =create_team(list_perso, team, nb)
+    return temp
 
 def get_list_perso(db):
     print("IN GET_LIST_PERSO")
     return list(db.persos.find())
     
+def get_alea_monstre(db):
+    print("IN GET_LIST_MONSTRE")
+    alea =random.radint(1, 10)
+    return list(db.monstres.find())
+
 def check_array(list_perso, string):
     print("IN CHECK_ARRAY")
     find=False
@@ -93,14 +100,11 @@ perso_choisi =""
 def create_team(list_perso, team, perso):
     print("IN CREATE_TEAM")
     while len(team) < 3:
-        tmp =get_choice_perso(perso)
-        #print(f"TMP = {tmp}")
-        print (list_perso)
+        tmp =show_perso(list_perso, team, perso)
         perso_choisi =check_exists(list_perso, tmp, perso)
-        #print(f"perso_choisi = {perso_choisi}")
         add_selection_in_team(list_perso, team, perso_choisi)
         perso =perso+1
-        show_perso(list_perso, team, perso)
+    show_team(team)
     return team
 
 def get_choice_perso(nbperso):
@@ -111,17 +115,13 @@ def get_choice_perso(nbperso):
 def check_exists(list_perso, string, perso):
     print("IN CHECK_EXISTS")
     bool =check_array(list_perso, string)  # ??
-    #print(bool)
     while not bool:
-        create_team(list_perso, perso)
+        create_team(list_perso, team, perso)
     return string
 
 def add_selection_in_team(list_perso, team, chosen):
     print("IN ADD_SELECTION_IN_TEAM")
     personnage =get_dico_in_array(list_perso, chosen)
-    #print(personnage)
-    #for item in personnage:
-    #    print(item)
     team.append(personnage)
     list_perso.pop(list_perso.index(personnage))
 
@@ -142,11 +142,32 @@ def get_high_score(db):
     print("GET_HIGH_SCORE")
     return db.score.find()
 
+def defaite_perso(team, item):
+    print("IN DEFAIE_PËRSO")
+    if item["PV"] <=0:
+        team.pop(team.index(item))
+    if len(team) == 0:
+        game_over():
+
+def defaite_monstre(db, item):
+    print("IN DEFAITE_MONSTRE")
+    if item["PV"] <=0:
+        db.monstre.delete(db.monstres.index(item))
+    if len(team) == 0:
+        you_win()
+
+def you_win():
+    print("IN YOU_WIN")
+    print("YOU WIN ! a bientot !²")
+
+def game_over():
+    print("IN GAME_OVER")
+    print("Vous avez perdu, a bientot !")
+    return 0
 
 def main():
     print("IN MAIN")
     db =get_database()
-    #choice=main_menu()
     choice=1
     if choice ==1:
         #username =get_username()
