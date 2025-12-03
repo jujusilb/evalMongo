@@ -1,4 +1,3 @@
-import sys
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from datetime import datetime
@@ -6,7 +5,8 @@ from datetime import datetime
 def get_database():
     # URI local : "mongodb://localhost:27017"
     # Ou URI Atlas : "mongodb+srv://<user>:<password>@cluster0.mongodb.net/"
-    client = MongoClient("mongodb://127.0.0.1:27017")
+    #client = MongoClient("mongodb://127.0.0.1:27017")
+    client = MongoClient("mongodb+srv://jujusilb:Gaspesie@cluster0.revmtu2.mongodb.net/?appName=Cluster0")
     db = client["evalMongo"]  # Base de données "todo_db"
     return db
 
@@ -49,7 +49,12 @@ def populate(db, collection, dico):
     print(f"{collection} remplie")
 
 db=get_database()
+print("TEST1")
 persos =create_perso_disponible(db)
+print("TEST2")
 monstres = create_monstre_disponible()
+print("TEST3")
 populate(db, "persos", persos)
+print("TEST4")
 populate(db, "monstres", monstres)
+print("TEST5")
