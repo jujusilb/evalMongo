@@ -10,7 +10,9 @@ import random
 from models import perso
 from models import monstre
 
-monstre= monstre.fetch_monster(list_monstre)
+
+score= 0
+monstre=monstre.fetch_monster(list_monstre)
 
 #annonce la victoire d'un joueur
 def you_win():
@@ -23,7 +25,7 @@ def game_over():
     print("Vous avez perdu, a bientot !")
     return 0
 
-def partie(team, db):
+def partie(team, list_monstre):
     print("IN PARTIE")
     while len(team)>0:
         tour(perso, monstre)
@@ -32,6 +34,9 @@ def attaque(attaquant, defenseur):
     print("IN ATTAQUE")
     coup =attaquant["ATK"]-defenseur["DEF"]
     defenseur["PV"] = defenseur["PV"]-coup
+    print(f"{attaquant} envois une attaque a {defenseur} de {attaquant["ATK"]}pts")
+    print(f"{defenseur} dispose de {defenseur["DEF"]} pts de defense")
+    print(f"il lui reste donc {defenseur["PV"]}pts de vie")
         
 def tour(perso, monstre):
     attaque(perso, monstre)
@@ -39,7 +44,7 @@ def tour(perso, monstre):
     attaque(monstre, perso)
     perso.check_perso(perso)
     
-def add_score(db, user, score)
+def add_score(db, user, score):
     db.score.insert_one({"name":user, "score":score})
     
 #verifie s'il le score est un high scode, si oui il l'envois en base
@@ -51,7 +56,7 @@ def stockage_score(db, high_score, user, score):
     for item in high_score:
         if score >  item["score"]:
             update_score(db, item, user, score)
-            return ""
+        
 def update_score(db, item, user, score):
     print("IN UPDATE_SCORE")
     db.score.update_one(

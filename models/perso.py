@@ -1,3 +1,8 @@
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+from datetime import datetime
+import random
+
 #affiche les perso et creer une equipe
 def about_perso(db, team):
     print("IN PERSO")
@@ -85,6 +90,7 @@ def pop_perso(team, perso):
 def check_perso(team, item):
     print("IN DEFAIE_PËRSO")
     if perso["PV"] <=0:
+        print(f"farewell {perso}")
         pop_perso(team, perso)
     check_team(team)
 

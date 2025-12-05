@@ -5,7 +5,7 @@ from datetime import datetime
 import random
 from models import perso
 from models import monstre
-
+import game
 
 
 #se connecte a la db
@@ -69,9 +69,11 @@ def main():
     choice=1
     if choice ==1:
         team =[]
+        list_monstre =[]
         #username =get_username()
         perso.about_perso(DB, team)
-        monstre.about_monster(DB)
+        monstre.about_monster(DB, list_monstre)
+        game.partie(team, list_monstre)
     elif choice ==2:
         print ("les highScire vont arriver vite !")
     elif choice == 3:

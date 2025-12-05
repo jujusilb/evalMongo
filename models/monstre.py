@@ -1,21 +1,25 @@
 import random
-
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+from datetime import datetime
+import game
+from game import score
 
 #compte le nombre de monstre en base
 def count_monster(list_monstre):
     print("IN COUNT_MONSTER")
     return len(list_monstre)
 
-def about_monster(db):
+def about_monster(db, list_monstre):
     print("IN ABOUT_MONSTRE")
-    list_monstre =get_list_monster(db)
-    return fetch_monster(list_monstre)
+    list_monstre.append(get_list_monster(db))
+
 
 
 #recupere la liste des monstre en database
 def get_list_monster(db):
     print("IN GET_LIST_MONSTER")
-    return list(db.monstre.find())
+    return list(db.monstres.find())
      
 
 
@@ -35,11 +39,18 @@ def delete_monster(db, monstre):
 def check_monstre(list_monstre, monstre):
     print("IN DEFAIE_MONSTRE")
     if monstre["PV"] <=0:
-        pop_monstre(list_monstre, monstre)
+        pop_monster(list_monstre, monstre)
+        score =score +1
         check_list_monstre(list_monstre)
-    
+        
+
+def check_list_monstre(list_monstre):
+    print("IN CHECK_LIST_MONSTER")
+    if len(list_monstre) <1:
+        game.you_win()
     
 #retire un perso de l'equipe
 def pop_monster(list_monstre, monstre):
     print("IN POP_monstre")
+    print(f"degage {monstre}")
     list_monstre.pop(list_monstre.index(monstre))
