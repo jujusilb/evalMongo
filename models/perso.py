@@ -2,13 +2,14 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from datetime import datetime
 import random
+import file_games
 
 #affiche les perso et creer une equipe
 def about_perso(db, team):
     print("IN PERSO")
-    perso=1
+    nbperso=1
     list_perso =get_list_perso(db)
-    team =create_team(list_perso, team, perso)
+    team =create_team(list_perso, team, nbperso)
 
 #affiche l'equipê
 def show_team(team):
@@ -21,12 +22,16 @@ def show_team(team):
 def show_perso(list_perso, nb):
     print("IN SHOW_PERSO")
     for item in list_perso:
-        print(f"Nom :{item["name"]}, Defense :{item["DEF"]}, Attaque :{item["ATK"]}, Points de vie :{item["PV"]}")
+        print(f"'Nom :{item['name']}, Defense :{item['DEF']}, Attaque :{item['ATK']}, Points de vie :{item['PV']}")
 
 #recupere la liste des perso en base
 def get_list_perso(db):
     print("IN GET_LIST_PERSO")
     return list(db.persos.find())
+
+def fetch_personnage(team):
+    print("IN FETCH_PERSONNAGE")
+    return team[0]
 
 #verifie si un perso est disponible
 def check_array(list_perso, string):
@@ -44,17 +49,28 @@ def get_dico_in_array(list_perso, chosen): # ???
             return item
         
 
-perso=1
+#retire un perso de l'equipe
+def pop_perso(team, perso):
+    print("IN POP_PERSO")
+    team.pop(team.index(perso))
+
+#verifie la santé d'un perso
+def check_perso(team, personnage):
+    print("IN DEFAIE_PËRSO")
+    if personnage["PV"] <=0:
+        pop_perso(team, personnage)
+
+nbperso=1
 perso_choisi =""
 #créé l'equipe      
-def create_team(list_perso, team, perso):
+def create_team(list_perso, team, nbperso):
     print("IN CREATE_TEAM")
     while len(team) < 3:
-        show_perso(list_perso, perso)
-        temp =get_choice_perso(perso)
-        perso_choisi =check_exists(list_perso, temp, perso, team)
+        show_perso(list_perso, nbperso)
+        temp =get_choice_perso(nbperso)
+        perso_choisi =check_exists(list_perso, temp, nbperso, team)
         add_selection_in_team(list_perso, team, perso_choisi)
-        perso =perso+1
+        nbperso =nbperso    +1
     show_team(team)
     return team
 
@@ -82,21 +98,28 @@ def add_selection_in_team(list_perso, team, chosen):
     list_perso.pop(list_perso.index(personnage))
 
 #retire un perso de l'equipe
-def pop_perso(team, perso):
+def pop_perso(team, personnage):
     print("IN POP_PERSO")
-    team.pop(team.index(perso))
+    for i, item in enumerate(team):
+        if item["name"] == personnage["name"]:
+            team.pop(i)
+            break 
+    #team.remove(team.index(personnage))
 
-#verifie la santé d'un perso
-def check_perso(team, item):
+#verifie la saZnté d'un perso
+def check_perso(team, personnage):
     print("IN DEFAIE_PËRSO")
-    if perso["PV"] <=0:
-        print(f"farewell {perso}")
-        pop_perso(team, perso)
-    check_team(team)
+    if personnage["PV"] <=0:
+        print(f"farewell {personnage["name"]}")
+        pop_perso(team, personnage)
+        return True
+    return False
 
-#verifie si l'equipe n'est pas vide
-def check_team(team):
-    print("IN CHECK_TEAM")
-    if len(team) == 0:
-        game_over()
+##verifie si l'equipe n'est pas vide
+#def check_team(team):
+#    print("IN CHECK_TEAM")
+#    if len(team) == 0:
+#        file_games.game_over()
+
+
        
