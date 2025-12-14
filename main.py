@@ -20,19 +20,19 @@ MAIN_MENU_LEN = len(MAIN_MENU)
 
 #agrege toute la partie du menu principale
 def main_menu():
-    print("IN MAIN_MENU")
+    ###print("IN MAIN_MENU")
     show_main_menu()
     return get_choice_main_menu(MAIN_MENU_LEN)
 
 #affiche le menu principale
 def show_main_menu():
-    print("IN SHOW_MENU")
+    ###print("IN SHOW_MENU")
     for item in MAIN_MENU:
         print(item)
 
 #recupere le choix du joueur au menu principale
 def get_choice_main_menu(max):
-    print("IN GET_CHOICE_MAIN_MENU")
+    ###print("IN GET_CHOICE_MAIN_MENU")
     choice =0
     while choice < 1 or choice > max :
         choice=int(input("quel est votre choix?"))
@@ -42,7 +42,7 @@ DB = db.get_database()
 
 #recupere le pseudo du joueur
 def get_username():
-    print("IN GET_USERNAME")
+    ###print("IN GET_USERNAME")
     username =input ("quel sera votre username?")
     return username
 
@@ -54,23 +54,19 @@ def get_high_score(db):
 
 #fonction principale
 def main():
-    print("IN MAIN")
-
-    choice=1
+    ###print("IN MAIN")
+    
+    choice=main_menu()
     if choice ==1:
-        
+        score=0
         team =[]
         list_monstre =[]
-        #username =get_username()
+        username =get_username()
         perso.about_perso(DB, team)
         monstre.about_monster(list_monstre)
-        for item in team:
-            print(item)
-        for item2 in list_monstre:
-            print("item2")
-        file_games.partie(team, list_monstre)
+        file_games.partie(team, list_monstre, score)
     elif choice ==2:
-        print ("les highScire vont arriver vite !")
+        print ("les highScore vont arriver vite !")
     elif choice == 3:
         print ("a tres vite !")
         return 0
